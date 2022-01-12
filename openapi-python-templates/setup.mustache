@@ -6,6 +6,9 @@ from setuptools import setup, find_packages  # noqa: H301
 
 NAME = "{{{projectName}}}"
 VERSION = "{{packageVersion}}"
+MODELS_PACKAGE = "{{{modelsPackageInstallationName}}}"
+MODELS_PACKAGE_VERSION = "{{{modelsPackageVersion}}}"
+
 {{#apiInfo}}
 {{#apis}}
 {{^hasMore}}
@@ -16,7 +19,7 @@ VERSION = "{{packageVersion}}"
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 
-REQUIRES = ["pydantic", "httpx", "fastapi", "typing_extensions"]
+REQUIRES = ["pydantic", "httpx", "fastapi", "typing_extensions", f"{MODELS_PACKAGE}=={MODELS_PACKAGE_VERSION}"]
 
 setup(
     name=NAME,

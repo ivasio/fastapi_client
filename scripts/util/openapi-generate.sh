@@ -71,8 +71,10 @@ generate_in_docker_http() {
 
 generate_in_docker_file() {
   INPUT_FILE="$(cd "$(dirname "$INPUT")" && pwd )"/"$(basename "$INPUT")"
+  CONFIG_FILE="$(cd "$(dirname "$CONFIG")" && pwd )"/"$(basename "$CONFIG")"
 
-  docker run --user $(id -u):$(id -g) --rm -v "$WORK_DIR":/generator-output -v "$PROJECT_ROOT":/local -v "${INPUT_FILE}":/openapi.json \
+  docker run --user $(id -u):$(id -g) --rm \
+    -v "$WORK_DIR":/generator-output -v "$PROJECT_ROOT":/local -v "${INPUT_FILE}":/openapi.json -v "${CONFIG_FILE}":/config.yaml\
     $OPENAPI_IMAGE generate \
     -g python \
     -o /generator-output \
@@ -81,6 +83,7 @@ generate_in_docker_file() {
     -t /local/openapi-python-templates \
     --type-mappings array=List,uuid=UUID,file=IO,object=Any \
     -i /openapi.json \
+    -c /config.yaml
     "$@"
 }
 
@@ -96,6 +99,10 @@ while [ $# -gt 0 ]; do
     ;;
   -w | --work-dir)
     WORK_DIR=$2
+    shift 2
+    ;;
+  -c | --config)
+    CONFIG=$2
     shift 2
     ;;
   -m | --with-meta)

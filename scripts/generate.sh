@@ -13,6 +13,7 @@ CMDNAME=${0##*/}
 INCLUDE_AUTH=""
 OUTPUT_PATH=""
 INPUT=""
+CONFIG=""  # todo add to usage
 PACKAGE_NAME=""
 IMPORT_NAME=""
 WORK_DIR=""
@@ -46,7 +47,7 @@ main() {
   WORK_DIR=$(mktemp -d "$TEMP_DIR/tmp.XXXXXXXXX")
   echo "Storing intermediate outputs in ${WORK_DIR}; it will be removed if generation is successful"
   setup_openapi_generation "$WORK_DIR"
-  "${PROJECT_ROOT}/scripts/util/openapi-generate.sh" -p "$PACKAGE_NAME" -w "$WORK_DIR" -i "$INPUT" ${WITH_META:+ --with-meta} -- "$@"
+  "${PROJECT_ROOT}/scripts/util/openapi-generate.sh" -p "$PACKAGE_NAME" -w "$WORK_DIR" -i "$INPUT" -c "$CONFIG" ${WITH_META:+ --with-meta} -- "$@"
 
   cd "${PROJECT_ROOT}"
 
@@ -174,6 +175,10 @@ while [ $# -gt 0 ]; do
     ;;
   -n | --import-name)
     IMPORT_NAME=$2
+    shift 2
+    ;;
+  -c | --config)
+    CONFIG=$2
     shift 2
     ;;
   -h | --help)
